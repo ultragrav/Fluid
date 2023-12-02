@@ -57,13 +57,5 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         }
     }
 
-    override fun copy(): ContainerComponent {
-        val component = ContainerComponent(size)
-        for (child in children) {
-            component.addComponent(child.component.copy(), child.x, child.y)
-        }
-        return component
-    }
-
     class Child(val component: Component, val x: Int, val y: Int)
 }
