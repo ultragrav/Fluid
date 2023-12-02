@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 
 open class ContainerComponent(size: Dimensions) : Component(size) {
-    private val children: MutableList<Child> = ArrayList()
+    protected val children: MutableList<Child> = ArrayList()
     fun <T : Component> addComponent(component: T, x: Int, y: Int): T {
         children.add(Child(component, x, y))
         component.parent = this
@@ -40,6 +40,12 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
     }
 
     override fun click(x: Int, y: Int, clickEvent: InventoryClickEvent) {
+        if (x == -1) {
+            // Own inventory click
+            children.forEach { it.component.click(x, y, clickEvent) }
+            return
+        }
+
         for (child in children) {
             if (x >= child.x && x < child.x + child.component.size.width && y >= child.y && y < child.y + child.component.size.height) {
                 child.component.click(x - child.x, y - child.y, clickEvent)
