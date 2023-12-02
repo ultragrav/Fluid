@@ -1,0 +1,4 @@
+name: FluidAPI
+main: net.ultragrav.fluid.FluidPlugin
+version: 1.0.0
+description: The Fluid API is a simple component-based GUI tool for bukkit and forks.
