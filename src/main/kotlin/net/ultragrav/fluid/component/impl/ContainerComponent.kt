@@ -47,7 +47,10 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         }
 
         for (child in children) {
-            if (x >= child.x && x < child.x + child.component.size.width && y >= child.y && y < child.y + child.component.size.height) {
+            if (
+                x in child.x..<child.x + child.component.size.width &&
+                y in child.y..<child.y + child.component.size.height
+            ) {
                 child.component.click(x - child.x, y - child.y, clickEvent)
                 return
             }

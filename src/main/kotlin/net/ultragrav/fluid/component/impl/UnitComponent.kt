@@ -7,7 +7,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-class UnitComponent(val item: ItemStack, val clickHandler: (InventoryClickEvent) -> Unit = { it.isCancelled = true }) :
+class UnitComponent(private val item: ItemStack, val clickHandler: (InventoryClickEvent) -> Unit = { }) :
     Component(Dimensions(1, 1)) {
     override fun render(): Solid {
         return Solid(1, 1, Collections.singletonList(item))
