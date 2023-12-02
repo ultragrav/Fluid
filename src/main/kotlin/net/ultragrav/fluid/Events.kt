@@ -10,6 +10,8 @@ class Events : Listener {
     fun onClick(event: InventoryClickEvent) {
         val inv = event.inventory
         if (inv.holder is FluidGui.Holder) {
+            event.isCancelled = true
+
             val gui = (inv.holder as FluidGui.Holder).gui
             if (event.clickedInventory == inv) {
                 val x = event.slot % 9
