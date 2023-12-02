@@ -10,10 +10,11 @@ import org.bukkit.inventory.ItemStack
 
 open class ContainerComponent(size: Dimensions) : Component(size) {
     private val children: MutableList<Child> = ArrayList()
-    fun addComponent(component: Component, x: Int, y: Int) {
+    fun <T : Component> addComponent(component: T, x: Int, y: Int): T {
         children.add(Child(component, x, y))
         component.parent = this
         component.update()
+        return component
     }
 
     private var background: ItemStack? = null
