@@ -6,6 +6,7 @@ import net.ultragrav.fluid.inventory.shape.Shape
 import net.ultragrav.fluid.render.FluidRenderer
 import net.ultragrav.fluid.render.Solid
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.inventory.ItemStack
 
 open class ContainerComponent(size: Dimensions) : Component(size) {
     private val children: MutableList<Child> = ArrayList()
@@ -15,12 +16,19 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         component.update()
     }
 
+    private var background: ItemStack? = null
+    fun setBackground(background: ItemStack?) {
+        this.background = background
+        update()
+    }
+
     override fun render(): Solid {
         val renderer = FluidRenderer(size.width, size.height)
         for (child in children) {
             val solid = child.component.render()
             renderer.drawSolid(child.x, child.y, solid)
         }
+        background?.let { renderer.fillEmpty(it) }
         return renderer.render()
     }
 
@@ -37,6 +45,14 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
                 return
             }
         }
+    }
+
+    override fun copy(): ContainerComponent {
+        val component = ContainerComponent(size)
+        for (child in children) {
+            component.addComponent(child.component.copy(), child.x, child.y)
+        }
+        return component
     }
 
     class Child(val component: Component, val x: Int, val y: Int)

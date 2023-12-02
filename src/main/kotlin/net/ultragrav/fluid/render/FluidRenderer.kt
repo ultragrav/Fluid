@@ -20,6 +20,16 @@ class FluidRenderer(val width: Int, val height: Int) {
         }
     }
 
+    fun fillEmpty(element: ItemStack) {
+        for (i in 0..<width) {
+            for (j in 0..<height) {
+                if (elements[j * width + i] == null) {
+                    drawElement(i, j, element)
+                }
+            }
+        }
+    }
+
     fun render(): Solid {
         return Solid(width, height, elements.toList())
     }

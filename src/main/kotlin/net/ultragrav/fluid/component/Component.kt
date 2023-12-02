@@ -15,4 +15,6 @@ abstract class Component(val size: Dimensions) {
     open fun update(area: Shape = Rectangle(size), solid: Solid = render()) {
         parent.updateChild(this, area, solid)
     }
+
+    abstract fun copy(): Component
 }

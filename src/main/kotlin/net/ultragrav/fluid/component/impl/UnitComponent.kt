@@ -16,4 +16,8 @@ class UnitComponent(val item: ItemStack, val clickHandler: (InventoryClickEvent)
     override fun click(x: Int, y: Int, clickEvent: InventoryClickEvent) {
         clickHandler(clickEvent)
     }
+
+    override fun copy(): UnitComponent {
+        return UnitComponent(item.clone(), clickHandler)
+    }
 }
