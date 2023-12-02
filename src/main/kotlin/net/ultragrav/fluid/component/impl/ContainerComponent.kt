@@ -12,6 +12,7 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
     fun addComponent(component: Component, x: Int, y: Int) {
         children.add(Child(component, x, y))
         component.parent = this
+        component.update()
     }
 
     override fun render(): Solid {
