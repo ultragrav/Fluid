@@ -16,12 +16,14 @@ class Rectangle(val dimensions: Dimensions, val x: Int = 0, val y: Int = 0) : Sh
         private var itY = y
 
         override fun hasNext(): Boolean {
-            return itY < dimensions.height
+            return itY < dimensions.height - 1 ||
+                    (itY == dimensions.height - 1 && itX < dimensions.width)
         }
 
         override fun next(): Int {
             val ret = itX + itY * box.width
-            if (itX >= dimensions.width) {
+            itX++
+            if (itX >= x + dimensions.width) {
                 itX = x
                 itY++
             }
