@@ -8,11 +8,12 @@ import net.ultragrav.fluid.render.Solid
 import org.bukkit.Bukkit
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
 
 open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions(9, rows)) {
-    val inv = Bukkit.createInventory(Holder(), rows * 9, title)
+    private val inv = Bukkit.createInventory(Holder(), rows * 9, title)
 
     override fun update(area: Shape, solid: Solid) {
         for ((j, i) in area.iterator(dimensions).withIndex()) {
@@ -20,7 +21,13 @@ open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions
         }
     }
 
+    open fun onClose(event: InventoryCloseEvent) {}
+
     fun open(player: HumanEntity) {
+        val previous = player.openInventory.topInventory
+        if (previous.holder is Holder) {
+            (previous.holder as Holder).gui.onClose(InventoryCloseEvent(player.openInventory))
+        }
         player.openInventory(inv)
     }
 

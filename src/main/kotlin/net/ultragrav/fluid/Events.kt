@@ -4,6 +4,7 @@ import net.ultragrav.fluid.inventory.FluidGui
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
 
 class Events : Listener {
     @EventHandler
@@ -20,6 +21,15 @@ class Events : Listener {
             } else {
                 gui.click(-1, -1, event)
             }
+        }
+    }
+
+    @EventHandler
+    fun onClose(event: InventoryCloseEvent) {
+        val inv = event.inventory
+        if (inv.holder is FluidGui.Holder) {
+            val gui = (inv.holder as FluidGui.Holder).gui
+            gui.onClose(event)
         }
     }
 }
