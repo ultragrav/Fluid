@@ -2,16 +2,16 @@ package net.ultragrav.fluid.inventory.shape
 
 import net.ultragrav.fluid.component.dimensions.Dimensions
 
-class Rectangle(val dimensions: Dimensions, val x: Int = 0, val y: Int = 0) : Shape() {
+class Rectangle(val dimensions: Dimensions, val x: Int = 0, val y: Int = 0) : Shape {
     override fun shift(shiftX: Int, shiftY: Int): Shape {
         return Rectangle(dimensions, x + shiftX, y + shiftY)
     }
 
-    override fun iterator(): Iterator<Int> {
-        return RectangleIterator()
+    override fun iterator(boundingBox: Dimensions): Iterator<Int> {
+        return RectangleIterator(boundingBox)
     }
 
-    inner class RectangleIterator : Iterator<Int> {
+    inner class RectangleIterator(val box: Dimensions) : Iterator<Int> {
         private var itX = x
         private var itY = y
 
@@ -20,8 +20,7 @@ class Rectangle(val dimensions: Dimensions, val x: Int = 0, val y: Int = 0) : Sh
         }
 
         override fun next(): Int {
-            val ret = itX + itY * dimensions.width
-            itX++
+            val ret = itX + itY * box.width
             if (itX >= dimensions.width) {
                 itX = x
                 itY++

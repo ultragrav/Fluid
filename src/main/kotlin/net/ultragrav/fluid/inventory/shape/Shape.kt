@@ -1,5 +1,8 @@
 package net.ultragrav.fluid.inventory.shape
 
-abstract class Shape : Iterable<Int> {
-    abstract fun shift(shiftX: Int = 0, shiftY: Int = 0): Shape
+import net.ultragrav.fluid.component.dimensions.Dimensions
+
+interface Shape {
+    fun shift(shiftX: Int = 0, shiftY: Int = 0): Shape
+    fun iterator(boundingBox: Dimensions): Iterator<Int>
 }

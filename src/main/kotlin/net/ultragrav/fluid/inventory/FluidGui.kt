@@ -15,7 +15,7 @@ open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions
     val inv = Bukkit.createInventory(Holder(), rows * 9, title)
 
     override fun update(area: Shape, solid: Solid) {
-        for ((j, i) in area.withIndex()) {
+        for ((j, i) in area.iterator(dimensions).withIndex()) {
             inv.setItem(i, solid.grid[j])
         }
     }

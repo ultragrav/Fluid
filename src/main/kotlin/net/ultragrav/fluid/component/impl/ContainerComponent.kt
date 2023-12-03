@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 
 open class ContainerComponent(size: Dimensions) : Component(size) {
-    protected val children: MutableList<Child> = ArrayList()
+    private val children: MutableList<Child> = ArrayList()
     fun <T : Component> addComponent(component: T, x: Int, y: Int): T {
         children.add(Child(component, x, y))
         component.parent = this
@@ -17,19 +17,19 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         return component
     }
 
-    private var background: ItemStack? = null
-    fun setBackground(background: ItemStack?) {
-        this.background = background
-        update()
-    }
+    var background: ItemStack? = null
+        set(value) {
+            field = value
+            update()
+        }
 
     override fun render(): Solid {
-        val renderer = FluidRenderer(size.width, size.height)
+        val renderer = FluidRenderer(this)
+        background?.let { renderer.fill(it) }
         for (child in children) {
             val solid = child.component.render()
             renderer.drawSolid(child.x, child.y, solid)
         }
-        background?.let { renderer.fillEmpty(it) }
         return renderer.render()
     }
 
@@ -48,8 +48,8 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
 
         for (child in children) {
             if (
-                x in child.x..<child.x + child.component.size.width &&
-                y in child.y..<child.y + child.component.size.height
+                x in child.x..<child.x + child.component.dimensions.width &&
+                y in child.y..<child.y + child.component.dimensions.height
             ) {
                 child.component.click(x - child.x, y - child.y, clickEvent)
                 return

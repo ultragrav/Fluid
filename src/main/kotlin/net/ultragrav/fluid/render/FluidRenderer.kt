@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack
 
 class FluidRenderer(val width: Int, val height: Int) {
     constructor(dimensions: Dimensions) : this(dimensions.width, dimensions.height)
-    constructor(component: Component) : this(component.size)
+    constructor(component: Component) : this(component.dimensions)
 
     private val elements = Array<ItemStack?>(width * height) { null }
 
@@ -25,12 +25,10 @@ class FluidRenderer(val width: Int, val height: Int) {
         }
     }
 
-    fun fillEmpty(element: ItemStack) {
+    fun fill(element: ItemStack) {
         for (i in 0..<width) {
             for (j in 0..<height) {
-                if (elements[j * width + i] == null) {
-                    drawElement(i, j, element)
-                }
+                drawElement(i, j, element)
             }
         }
     }
