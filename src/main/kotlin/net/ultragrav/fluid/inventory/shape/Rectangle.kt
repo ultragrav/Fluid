@@ -17,7 +17,7 @@ class Rectangle(val dimensions: Dimensions, val x: Int = 0, val y: Int = 0) : Sh
 
         override fun hasNext(): Boolean {
             return itY < y + dimensions.height - 1 ||
-                    (itY == y + dimensions.height - 1 && itX < dimensions.width)
+                    (itY == y + dimensions.height - 1 && itX < x + dimensions.width)
         }
 
         override fun next(): Int {
