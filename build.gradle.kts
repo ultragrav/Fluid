@@ -12,8 +12,8 @@ repositories {
 }
 
 dependencies {
-    api("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
-    api("net.kyori:adventure-api:4.14.0")
+    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("net.kyori:adventure-api:4.14.0")
 }
 
 publishing {
