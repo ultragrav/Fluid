@@ -30,7 +30,7 @@ class ListComponent<T>(
 
     private fun updateElements(range: IntRange) {
         val renderOffset = max(range.first - offset, 0)
-        val renderLength = min(range.last - range.first, dimensions.size - renderOffset)
+        val renderLength = min(range.last - range.first + 1, dimensions.size - renderOffset)
         val shape = Lines(dimensions, 0, 0, renderOffset, renderLength)
         val solid = Solid(renderLength, 1, this.subList(range.first, range.last + 1).map(renderer))
         update(shape, solid)
