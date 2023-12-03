@@ -4,11 +4,10 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.ultragrav.fluid.component.dimensions.Box
 import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.component.dimensions.Point
-import net.ultragrav.fluid.render.Solid
 import org.bukkit.Material
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
-import java.util.*
+import kotlin.math.ceil
 
 class ActionableListComponent(
     dimensions: Dimensions,
@@ -22,15 +21,17 @@ class ActionableListComponent(
         { _, el, ev -> el.action(ev) }
     ), actionArea.x, actionArea.y)
 
+    private val numPages get() = ceil(actionList.size / actionArea.dimensions.size.toFloat()).toInt()
     private var page = 0
         set(value) {
             field = value
             actionList.offset = value * actionArea.dimensions.size
-            previousPageButton.update()
-            nextPageButton.update()
+
+            previousPageButton.active = value > 0
+            nextPageButton.active = value < numPages
         }
 
-    private val previousPageButton = addComponent(object : UnitComponent(
+    private val previousPageButton = addComponent(ButtonComponent(
         ItemStack(Material.ARROW)
             .also {
                 it.itemMeta = it.itemMeta.also { meta ->
@@ -39,21 +40,13 @@ class ActionableListComponent(
                     )
                 }
             },
-        { ev ->
+        clickHandler = { ev ->
             ev.isCancelled = true
             page--
         }
-    ) {
-        override fun render(): Solid {
-            return if (page == 0) {
-                Solid(1, 1, Collections.singletonList(null))
-            } else {
-                super.render()
-            }
-        }
-    }, previousPageButtonLocation.x, previousPageButtonLocation.y)
+    ), previousPageButtonLocation.x, previousPageButtonLocation.y)
 
-    private val nextPageButton = addComponent(object : UnitComponent(
+    private val nextPageButton = addComponent(ButtonComponent(
         ItemStack(Material.ARROW)
             .also {
                 it.itemMeta = it.itemMeta.also { meta ->
@@ -62,23 +55,15 @@ class ActionableListComponent(
                     )
                 }
             },
-        { ev ->
+        clickHandler = { ev ->
             ev.isCancelled = true
             page++
         }
-    ) {
-        override fun render(): Solid {
-            return if (page == actionList.size / actionArea.dimensions.size) {
-                Solid(1, 1, Collections.singletonList(null))
-            } else {
-                super.render()
-            }
-        }
-    }, nextPageButtonLocation.x, nextPageButtonLocation.y)
+    ), nextPageButtonLocation.x, nextPageButtonLocation.y)
 
     fun addAction(item: ItemStack, action: (InventoryClickEvent) -> Unit) {
         actionList.add(Action(item, action))
     }
 
-    data class Action(val item: ItemStack, val action: (InventoryClickEvent) -> Unit)
+    private data class Action(val item: ItemStack, val action: (InventoryClickEvent) -> Unit)
 }
