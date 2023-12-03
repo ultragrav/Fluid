@@ -7,10 +7,14 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-open class UnitComponent(private val item: ItemStack, val clickHandler: (InventoryClickEvent) -> Unit = { }) :
-    Component(Dimensions(1, 1)) {
+open class UnitComponent(
+    private val item: ItemStack,
+    val clickHandler: (InventoryClickEvent) -> Unit = { }
+) : Component(Dimensions(1, 1)) {
+    private val rendered by lazy { Solid(1, 1, Collections.singletonList(item)) }
+
     override fun render(): Solid {
-        return Solid(1, 1, Collections.singletonList(item))
+        return rendered
     }
 
     override fun click(x: Int, y: Int, clickEvent: InventoryClickEvent) {
