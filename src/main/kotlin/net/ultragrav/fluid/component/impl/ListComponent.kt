@@ -13,7 +13,8 @@ class ListComponent<T>(
     size: Dimensions,
     val renderer: (T) -> ItemStack,
     val clickHandler: (Int, T, InventoryClickEvent) -> Unit,
-    private val backingList: MutableList<T> = ArrayList()
+    private val backingList: MutableList<T> = ArrayList(),
+    private val emptyElement: ItemStack? = null
 ) : Component(size), MutableList<T> by backingList {
     var offset: Int = 0
         set(value) {
@@ -24,7 +25,7 @@ class ListComponent<T>(
     override fun render(): Solid {
         val items = ArrayList<ItemStack?>(dimensions.size)
         items.addAll(this.subList(offset, min(offset + dimensions.size, size)).map(renderer))
-        items.addAll(List(dimensions.size - items.size) { null })
+        items.addAll(List(dimensions.size - items.size) { emptyElement })
         return Solid(dimensions.width, dimensions.height, items)
     }
 
