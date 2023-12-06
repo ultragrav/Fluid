@@ -4,6 +4,7 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.ultragrav.fluid.component.dimensions.Box
 import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.component.dimensions.Point
+import net.ultragrav.fluid.inventory.ClickBuilder
 import org.bukkit.Material
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
@@ -63,6 +64,9 @@ class ActionableListComponent(
 
     fun addAction(item: ItemStack, action: (InventoryClickEvent) -> Unit) {
         actionList.add(Action(item, action))
+    }
+    fun addAction(item: ItemStack, actionBuilder: ClickBuilder.() -> Unit) {
+        addAction(item, ClickBuilder().also(actionBuilder).build())
     }
 
     private data class Action(val item: ItemStack, val action: (InventoryClickEvent) -> Unit)
