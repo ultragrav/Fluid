@@ -62,11 +62,8 @@ class ActionableListComponent(
         }
     ), nextPageButtonLocation.x, nextPageButtonLocation.y)
 
-    fun addAction(item: ItemStack, action: (InventoryClickEvent) -> Unit) {
-        actionList.add(Action(item, action))
-    }
     fun addAction(item: ItemStack, actionBuilder: ClickBuilder.() -> Unit) {
-        addAction(item, ClickBuilder().also(actionBuilder).build())
+        actionList.add(Action(item, ClickBuilder().also(actionBuilder).build()))
     }
 
     private data class Action(val item: ItemStack, val action: (InventoryClickEvent) -> Unit)
