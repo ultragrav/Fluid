@@ -27,7 +27,7 @@ open class ButtonComponent(
     }
 
     override fun click(x: Int, y: Int, clickEvent: InventoryClickEvent) {
-        if (!active) return
+        if (!active || x != 0 || y != 0) return
         clickHandler(clickEvent)
     }
 

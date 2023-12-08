@@ -5,21 +5,28 @@ import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.render.Solid
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
-import java.util.*
+import kotlin.reflect.KProperty
 
-open class UnitComponent(
-    private val item: ItemStack,
-    val clickHandler: (InventoryClickEvent) -> Unit = { }
+class VarComponent<T>(
+    private var value: T,
+    private val renderer: (T) -> ItemStack?,
+    private val clickHandler: (InventoryClickEvent) -> Unit = {}
 ) : Component(Dimensions(1, 1)) {
-    private val rendered by lazy { Solid(1, 1, Collections.singletonList(item)) }
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
+        return value
+    }
+
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+        this.value = value
+        update()
+    }
 
     override fun render(): Solid {
-        return rendered
+        return Solid(1, 1, listOf(renderer(value)))
     }
 
     override fun click(x: Int, y: Int, clickEvent: InventoryClickEvent) {
         if (x != 0 || y != 0) return
         clickHandler(clickEvent)
     }
-
 }
