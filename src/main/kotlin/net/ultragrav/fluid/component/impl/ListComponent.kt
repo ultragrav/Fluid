@@ -33,7 +33,13 @@ class ListComponent<T>(
         val renderOffset = max(range.first - offset, 0)
         val renderLength = min(range.last - range.first + 1, dimensions.size - renderOffset)
         val shape = Lines(dimensions, 0, 0, renderOffset, renderLength)
-        val solid = Solid(renderLength, 1, this.subList(range.first, range.last + 1).map(renderer))
+
+        // Render the elements that changed, including nulls after the list
+        val elements = ArrayList<ItemStack?>(renderLength)
+        elements.addAll(this.subList(range.first, min(range.last + 1, size)).map(renderer))
+        elements.addAll(List(renderLength - elements.size) { null })
+
+        val solid = Solid(renderLength, 1, elements)
         update(shape, solid)
     }
 
@@ -92,7 +98,7 @@ class ListComponent<T>(
 
     override fun removeAt(index: Int): T {
         val ret = backingList.removeAt(index)
-        updateElements(index..<size)
+        updateElements(index..<size+1)
         return ret
     }
 
