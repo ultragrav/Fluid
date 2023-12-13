@@ -25,11 +25,10 @@ class ActionableListComponent(
     private val numPages get() = ceil(actionList.size / actionArea.dimensions.size.toFloat()).toInt()
     private var page = 0
         set(value) {
-            field = value
-            actionList.offset = value * actionArea.dimensions.size
+            field = value.coerceAtLeast(0).coerceAtMost(numPages - 1)
+            actionList.offset = field * actionArea.dimensions.size
 
-            previousPageButton.active = value > 0
-            nextPageButton.active = value < numPages
+            updatePageButtons()
         }
 
     private val previousPageButton = addComponent(ButtonComponent(
@@ -62,8 +61,14 @@ class ActionableListComponent(
         }
     ), nextPageButtonLocation.x, nextPageButtonLocation.y)
 
+    private fun updatePageButtons() {
+        previousPageButton.active = page > 0
+        nextPageButton.active = page < numPages - 1
+    }
+
     fun addAction(item: ItemStack, actionBuilder: ClickBuilder.() -> Unit) {
         actionList.add(Action(item, ClickBuilder().also(actionBuilder).build()))
+        updatePageButtons()
     }
 
     private data class Action(val item: ItemStack, val action: (InventoryClickEvent) -> Unit)

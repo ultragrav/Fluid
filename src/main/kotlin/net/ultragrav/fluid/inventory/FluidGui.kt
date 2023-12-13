@@ -31,6 +31,10 @@ open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions
         player.openInventory(inv)
     }
 
+    fun closeAll() {
+        inv.close()
+    }
+
     inner class Holder : InventoryHolder {
         val gui: FluidGui get() = this@FluidGui
 

@@ -32,11 +32,12 @@ class ListComponent<T>(
     private fun updateElements(range: IntRange) {
         val renderOffset = max(range.first - offset, 0)
         val renderLength = min(range.last - range.first + 1, dimensions.size - renderOffset)
+            .coerceAtLeast(0)
         val shape = Lines(dimensions, 0, 0, renderOffset, renderLength)
 
         // Render the elements that changed, including nulls after the list
         val elements = ArrayList<ItemStack?>(renderLength)
-        elements.addAll(this.subList(range.first, min(range.last + 1, size)).map(renderer))
+        elements.addAll(this.subList(range.first + offset, min(range.first + offset + renderLength, size)).map(renderer))
         elements.addAll(List(renderLength - elements.size) { null })
 
         val solid = Solid(renderLength, 1, elements)
