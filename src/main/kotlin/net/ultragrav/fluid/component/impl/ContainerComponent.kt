@@ -79,5 +79,10 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         }
     }
 
+    override fun onClose(event: InventoryClickEvent) {
+        super.onClose(event)
+        children.forEach { it.component.onClose(event) }
+    }
+
     class Child(val component: Component, val x: Int, val y: Int)
 }
