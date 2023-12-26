@@ -23,7 +23,6 @@ open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions
     }
 
     open fun onDrag(event: InventoryDragEvent) {}
-    open fun onClose(event: InventoryCloseEvent) {}
 
     fun open(player: HumanEntity) {
         val previous = player.openInventory.topInventory

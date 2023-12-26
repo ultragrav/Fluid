@@ -6,6 +6,7 @@ import net.ultragrav.fluid.inventory.shape.Rectangle
 import net.ultragrav.fluid.inventory.shape.Shape
 import net.ultragrav.fluid.render.Solid
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
 
 abstract class Component(val dimensions: Dimensions) {
     lateinit var parent: ContainerComponent
@@ -13,7 +14,7 @@ abstract class Component(val dimensions: Dimensions) {
     abstract fun render(): Solid
     abstract fun click(x: Int, y: Int, clickEvent: InventoryClickEvent)
 
-    open fun onClose(event: InventoryClickEvent) {}
+    open fun onClose(event: InventoryCloseEvent) {}
 
     open fun update(area: Shape = Rectangle(dimensions), solid: Solid = render()) {
         // Not initialized yet, this update will be superseded by the one called by the parent
