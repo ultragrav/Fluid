@@ -2,6 +2,7 @@ package net.ultragrav.fluid.component.impl
 
 import net.ultragrav.fluid.component.Component
 import net.ultragrav.fluid.component.dimensions.Dimensions
+import net.ultragrav.fluid.inventory.shape.Rectangle
 import net.ultragrav.fluid.inventory.shape.Shape
 import net.ultragrav.fluid.render.FluidRenderer
 import net.ultragrav.fluid.render.Solid
@@ -10,11 +11,32 @@ import org.bukkit.inventory.ItemStack
 
 open class ContainerComponent(size: Dimensions) : Component(size) {
     private val children: MutableList<Child> = ArrayList()
+
     fun <T : Component> addComponent(component: T, x: Int, y: Int): T {
-        children.add(Child(component, x, y))
+        // Check bounds
+        val child = Child(component, x, y)
+        checkCandidate(child)
+        children.add(child)
         component.parent = this
         component.update()
         return component
+    }
+
+    private fun checkCandidate(candidate: Child) {
+        require(candidate.x >= 0 && candidate.y >= 0) { "Negative coordinates!" }
+        val maxX = candidate.x + candidate.component.dimensions.width
+        val maxY = candidate.y + candidate.component.dimensions.height
+        require(maxX <= dimensions.width && maxY <= dimensions.height) { "Out of bounds!" }
+
+        val occupied = children.flatMap {
+            Rectangle(it.component.dimensions, it.x, it.y)
+                .iterator(dimensions).asSequence().toSet()
+        }.toSet()
+
+        val area = Rectangle(candidate.component.dimensions, candidate.x, candidate.y)
+        val areaOccupied = area.iterator(dimensions).asSequence().toSet()
+
+        require(areaOccupied.intersect(occupied).isEmpty()) { "Overlapping component!" }
     }
 
     var background: ItemStack? = null
