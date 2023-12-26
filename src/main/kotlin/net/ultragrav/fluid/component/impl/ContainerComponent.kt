@@ -2,6 +2,7 @@ package net.ultragrav.fluid.component.impl
 
 import net.ultragrav.fluid.component.Component
 import net.ultragrav.fluid.component.dimensions.Dimensions
+import net.ultragrav.fluid.inventory.FluidGui
 import net.ultragrav.fluid.inventory.shape.Rectangle
 import net.ultragrav.fluid.inventory.shape.Shape
 import net.ultragrav.fluid.render.FluidRenderer
@@ -83,6 +84,11 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
     override fun onClose(event: InventoryCloseEvent) {
         super.onClose(event)
         children.forEach { it.component.onClose(event) }
+    }
+
+    fun asGui(title: net.kyori.adventure.text.Component): FluidGui {
+        return FluidGui(title, dimensions.height)
+            .also { it.addComponent(this, 0, 0) }
     }
 
     class Child(val component: Component, val x: Int, val y: Int)
