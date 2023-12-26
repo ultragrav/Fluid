@@ -13,7 +13,7 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
 
 open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions(9, rows)) {
-    private val inv = Bukkit.createInventory(Holder(), rows * 9, title)
+    val inv = Bukkit.createInventory(Holder(), rows * 9, title)
 
     override fun update(area: Shape, solid: Solid) {
         for ((j, i) in area.iterator(dimensions).withIndex()) {
