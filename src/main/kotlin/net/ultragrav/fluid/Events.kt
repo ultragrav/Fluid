@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryDragEvent
 
 class Events : Listener {
     @EventHandler
@@ -21,6 +22,17 @@ class Events : Listener {
             } else {
                 gui.click(-1, -1, event)
             }
+        }
+    }
+
+    @EventHandler
+    fun onDrag(event: InventoryDragEvent) {
+        val inv = event.inventory
+        if (inv.holder is FluidGui.Holder) {
+            event.isCancelled = true
+
+            val gui = (inv.holder as FluidGui.Holder).gui
+            gui.onDrag(event)
         }
     }
 

@@ -9,6 +9,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
 
@@ -21,6 +22,7 @@ open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions
         }
     }
 
+    open fun onDrag(event: InventoryDragEvent) {}
     open fun onClose(event: InventoryCloseEvent) {}
 
     fun open(player: HumanEntity) {
