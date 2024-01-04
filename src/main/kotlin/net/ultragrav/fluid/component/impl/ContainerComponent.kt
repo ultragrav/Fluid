@@ -7,6 +7,8 @@ import net.ultragrav.fluid.inventory.shape.Rectangle
 import net.ultragrav.fluid.inventory.shape.Shape
 import net.ultragrav.fluid.render.FluidRenderer
 import net.ultragrav.fluid.render.Solid
+import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
@@ -84,6 +86,11 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
     override fun onClose(event: InventoryCloseEvent) {
         super.onClose(event)
         children.forEach { it.component.onClose(event) }
+    }
+
+    override fun onOpen(player: HumanEntity) {
+        super.onOpen(player)
+        children.forEach { it.component.onOpen(player) }
     }
 
     fun asGui(title: net.kyori.adventure.text.Component): FluidGui {

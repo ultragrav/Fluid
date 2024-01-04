@@ -30,6 +30,7 @@ open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions
             (previous.holder as Holder).gui.onClose(InventoryCloseEvent(player.openInventory))
         }
         player.openInventory(inv)
+        onOpen(player)
     }
 
     fun closeAll() {
