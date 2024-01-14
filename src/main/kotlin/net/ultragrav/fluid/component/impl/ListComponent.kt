@@ -38,7 +38,7 @@ class ListComponent<T>(
         // Render the elements that changed, including nulls after the list
         val elements = ArrayList<ItemStack?>(renderLength)
         elements.addAll(this.subList(range.first + offset, min(range.first + offset + renderLength, size)).map(renderer))
-        elements.addAll(List(renderLength - elements.size) { null })
+        elements.addAll(List(renderLength - elements.size) { emptyElement })
 
         val solid = Solid(renderLength, 1, elements)
         update(shape, solid)
@@ -99,7 +99,7 @@ class ListComponent<T>(
 
     override fun removeAt(index: Int): T {
         val ret = backingList.removeAt(index)
-        updateElements(index..<size+1)
+        updateElements(index..size)
         return ret
     }
 

@@ -11,7 +11,7 @@ class Lines(val dimensions: Dimensions, val x: Int, val y: Int, val offset: Int,
         return LinesIterator(boundingBox)
     }
 
-    inner class LinesIterator(val box: Dimensions) : Iterator<Int> {
+    inner class LinesIterator(private val box: Dimensions) : Iterator<Int> {
         private var itX = x + offset % dimensions.width
         private var itY = y + offset / dimensions.width
 
