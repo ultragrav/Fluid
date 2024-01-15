@@ -23,7 +23,7 @@ class Lines(val dimensions: Dimensions, val x: Int, val y: Int, val offset: Int,
         override fun next(): Int {
             val ret = itX + itY * box.width
             itX++
-            if (itX >= dimensions.width) {
+            if (itX >= dimensions.width + x) {
                 itX = x
                 itY++
             }
