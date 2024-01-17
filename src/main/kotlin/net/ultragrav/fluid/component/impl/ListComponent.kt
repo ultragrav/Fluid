@@ -9,10 +9,10 @@ import org.bukkit.inventory.ItemStack
 import kotlin.math.max
 import kotlin.math.min
 
-class ListComponent<T>(
+open class ListComponent<T>(
     size: Dimensions,
     val renderer: (T) -> ItemStack,
-    val clickHandler: (Int, T, InventoryClickEvent) -> Unit,
+    val clickHandler: (Int, T, InventoryClickEvent) -> Unit = { _, _, _ -> },
     private val backingList: MutableList<T> = ArrayList(),
     private val emptyElement: ItemStack? = null
 ) : Component(size), MutableList<T> by backingList {
