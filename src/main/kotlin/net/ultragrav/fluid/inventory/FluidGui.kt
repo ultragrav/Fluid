@@ -17,8 +17,19 @@ open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions
     val inv = Bukkit.createInventory(Holder(), rows * 9, title)
 
     override fun update(area: Shape, solid: Solid) {
-        for ((j, i) in area.iterator(dimensions).withIndex()) {
-            inv.setItem(i, solid.grid[j])
+        val numUpdates = area.iterator(dimensions).asSequence().count()
+        if (numUpdates <= 5) {
+            // Small update
+            for ((j, i) in area.iterator(dimensions).withIndex()) {
+                inv.setItem(i, solid.grid[j])
+            }
+        } else {
+            // Large update (send only one packet)
+            val contents = inv.contents
+            for ((j, i) in area.iterator(dimensions).withIndex()) {
+                contents[i] = solid.grid[j]
+            }
+            inv.contents = contents
         }
     }
 
