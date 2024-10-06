@@ -26,6 +26,11 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         return component
     }
 
+    fun button(x: Int, y: Int, builder: RendererComponent.Builder.() -> Unit) {
+        val component = RendererComponent.Builder().apply(builder).build()
+        addComponent(component, x, y)
+    }
+
     private fun checkCandidate(candidate: Child) {
         require(candidate.x >= 0 && candidate.y >= 0) { "Negative coordinates!" }
         val maxX = candidate.x + candidate.component.dimensions.width
@@ -59,7 +64,7 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         return renderer.render()
     }
 
-    fun updateChild(childComponent: Component, area: Shape, solid: Solid) {
+    open fun updateChild(childComponent: Component, area: Shape, solid: Solid) {
         val child = children.first { it.component == childComponent }
         val newArea = area.shift(child.x, child.y)
         update(newArea, solid)
