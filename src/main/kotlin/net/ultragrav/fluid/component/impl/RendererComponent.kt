@@ -25,11 +25,11 @@ open class RendererComponent(
         private var renderer: () -> ItemStack = { ItemStack(Material.BARRIER) }
         private var clickHandler: (InventoryClickEvent) -> Unit = { }
 
-        fun render(renderer: () -> ItemStack) {
+        fun renderer(renderer: () -> ItemStack) {
             this.renderer = renderer
         }
 
-        fun click(clickHandler: (InventoryClickEvent) -> Unit) {
+        fun onClick(clickHandler: (InventoryClickEvent) -> Unit) {
             this.clickHandler = clickHandler
         }
 
