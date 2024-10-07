@@ -40,6 +40,11 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         addComponent(component, x, y)
     }
 
+    fun container(x: Int = -1, y: Int = -1, width: Int, height: Int, builder: ContainerComponent.() -> Unit) {
+        val component = ContainerComponent(Dimensions(1, 1)).apply(builder)
+        addComponent(component, x, y)
+    }
+
     private fun checkCandidate(candidate: Child) {
         require(candidate.x >= 0 && candidate.y >= 0) { "Negative coordinates!" }
         val maxX = candidate.x + candidate.component.dimensions.width
