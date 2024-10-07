@@ -53,18 +53,17 @@ class FlexLayout(
         val component: Component,
         override var pos: Int,
     ) : Flexible {
-        private val dims = TwoAxis(component.dimensions)
+        val dims = TwoAxis(component.dimensions)
         override val size: Int
             get() = dims[Axis.INLINE]
     }
 
     private inner class FlexGroup(
         val members: List<Flexible>,
-        override var pos: Int
-    ) : Flexible {
-        override val size: Int
-            get() = members.sumOf { it.size }
-    }
+        override var pos: Int,
+        override var size: Int = members.sumOf { it.size }
+    ) : Flexible
+
     override fun layout(components: List<Component>, dimensions: Dimensions): List<ContainerComponent.Child> {
         if (dimensions.width == 0 || dimensions.height == 0) {
             return emptyList()
@@ -75,6 +74,7 @@ class FlexLayout(
         // Calculate which items are in which rows
         val rows = calculateRows(items, dims.inline)
         rows.forEach { flex(it, justify, dims.inline) }
+        rows.forEach { it.size = it.members.maxOf { m -> (m as FlexItem).dims[Axis.CROSS] } }
         val crossGroup = FlexGroup(rows, 0)
         flex(crossGroup, align, dims.cross)
 
