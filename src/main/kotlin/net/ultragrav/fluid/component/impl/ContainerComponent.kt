@@ -65,9 +65,10 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
     fun flexLayout(
         direction: FlexLayout.Direction = FlexLayout.Direction.HORIZONTAL,
         justify: FlexLayout.Justify = FlexLayout.Justify.START,
-        align: FlexLayout.Justify = FlexLayout.Justify.START
+        align: FlexLayout.Justify = FlexLayout.Justify.START,
+        wrap: Boolean = true
     ) {
-        layout(FlexLayout(direction, justify, align))
+        layout(FlexLayout(direction, justify, align, wrap))
     }
 
     override fun render(): Solid {
