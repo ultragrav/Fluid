@@ -16,7 +16,14 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 open class ContainerComponent(size: Dimensions) : Component(size) {
+
     private val children: MutableList<Child> = ArrayList()
+
+    override val root: ContainerComponent
+        get() {
+            if (parent == this) return this
+            return parent.root
+        }
 
     fun <T : Component> addComponent(component: T, x: Int = -1, y: Int = -1): T {
         // Check bounds

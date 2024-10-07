@@ -13,6 +13,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 abstract class Component(val dimensions: Dimensions) {
     lateinit var parent: ContainerComponent
 
+    open val root: ContainerComponent
+        get() = parent.root
+
     abstract fun render(): Solid
     abstract fun click(x: Int, y: Int, clickEvent: InventoryClickEvent)
 
