@@ -28,7 +28,7 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         return component
     }
 
-    fun button(x: Int, y: Int, builder: RendererComponent.Builder.() -> Unit) {
+    fun button(x: Int = -1, y: Int = -1, builder: RendererComponent.Builder.() -> Unit) {
         val component = RendererComponent.Builder().apply(builder).build()
         addComponent(component, x, y)
     }
