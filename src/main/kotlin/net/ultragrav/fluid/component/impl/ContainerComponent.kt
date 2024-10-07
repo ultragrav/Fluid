@@ -62,7 +62,11 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         children.addAll(newChildren)
     }
 
-    fun flexLayout(direction: FlexLayout.Direction, justify: FlexLayout.Justify, align: FlexLayout.Justify) {
+    fun flexLayout(
+        direction: FlexLayout.Direction = FlexLayout.Direction.HORIZONTAL,
+        justify: FlexLayout.Justify = FlexLayout.Justify.START,
+        align: FlexLayout.Justify = FlexLayout.Justify.START
+    ) {
         layout(FlexLayout(direction, justify, align))
     }
 
