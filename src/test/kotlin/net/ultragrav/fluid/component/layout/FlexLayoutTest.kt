@@ -62,4 +62,19 @@ class FlexLayoutTest {
         assertEquals(5, children6[2].x)
         assertEquals(7, children6[3].x)
     }
+
+    @Test
+    fun testWrap() {
+        val twelveComponents = (0..<12).map { DummyComponent(Dimensions(1, 1)) }
+        val layout7 = FlexLayout()
+        val children7 = layout7.layout(twelveComponents, Dimensions(9, 2))
+        for (i in 0..<9) {
+            assertEquals(i, children7[i].x)
+            assertEquals(0, children7[i].y)
+        }
+        for (i in 9..<12) {
+            assertEquals(i - 9, children7[i].x)
+            assertEquals(1, children7[i].y)
+        }
+    }
 }

@@ -96,8 +96,9 @@ class FlexLayout(
         var itemQueue = items.toList()
         val rows: MutableList<FlexGroup> = mutableListOf()
         while (itemQueue.isNotEmpty()) {
-            val row = sizePartialSums.takeWhile { it - sizePartialSums.first() <= inlineSize }
-            rows.add(FlexGroup(itemQueue.take(row.size), 0))
+            val sums = sizePartialSums.takeWhile { it - sizePartialSums.first() <= inlineSize }
+            val row = itemQueue.take(sums.size - 1)
+            rows.add(FlexGroup(row, 0))
             sizePartialSums = sizePartialSums.drop(row.size)
             itemQueue = itemQueue.drop(row.size)
         }
