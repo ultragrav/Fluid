@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack
 
 open class ContainerComponent(size: Dimensions) : Component(size) {
 
-    val children: MutableList<Child> = ArrayList()
+    private val children: MutableList<Child> = ArrayList()
 
     override val root: ContainerComponent
         get() {
