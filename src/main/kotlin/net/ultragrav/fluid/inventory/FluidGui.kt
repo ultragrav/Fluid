@@ -16,7 +16,12 @@ import org.bukkit.inventory.InventoryHolder
 open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions(9, rows)) {
     val inv = Bukkit.createInventory(Holder(), rows * 9, title)
 
+    init {
+        initializeSelfParent()
+    }
+
     override fun update(area: Shape, solid: Solid) {
+
         val numUpdates = area.iterator(dimensions).asSequence().count()
         if (numUpdates <= 5) {
             // Small update

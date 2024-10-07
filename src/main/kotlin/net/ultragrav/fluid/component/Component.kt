@@ -28,4 +28,10 @@ abstract class Component(val dimensions: Dimensions) {
 
         parent.updateChild(this, area, solid)
     }
+
+    internal fun initializeSelfParent() {
+        if (!::parent.isInitialized && this is ContainerComponent) {
+            parent = this
+        }
+    }
 }
