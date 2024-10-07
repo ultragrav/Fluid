@@ -15,11 +15,11 @@ class FluidRenderer(val width: Int, val height: Int) {
     }
 
     fun drawSolid(x: Int, y: Int, solid: Solid) {
-        if (x + solid.width > width || y + solid.height > height)
-            throw IllegalArgumentException("Solid does not fit in renderer")
-
         for (i in 0..<solid.width) {
             for (j in 0..<solid.height) {
+                val ex = x + i
+                val ey = y + j
+                if (ex < 0 || ex >= width || ey < 0 || ey >= height) continue
                 drawElement(x + i, y + j, solid.grid[j * solid.width + i])
             }
         }

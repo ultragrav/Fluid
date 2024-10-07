@@ -2,6 +2,8 @@ package net.ultragrav.fluid.component.impl
 
 import net.ultragrav.fluid.component.Component
 import net.ultragrav.fluid.component.dimensions.Dimensions
+import net.ultragrav.fluid.component.layout.FlexLayout
+import net.ultragrav.fluid.component.layout.LayoutStrategy
 import net.ultragrav.fluid.inventory.FluidGui
 import net.ultragrav.fluid.inventory.shape.Rectangle
 import net.ultragrav.fluid.inventory.shape.Shape
@@ -16,10 +18,10 @@ import org.bukkit.inventory.ItemStack
 open class ContainerComponent(size: Dimensions) : Component(size) {
     private val children: MutableList<Child> = ArrayList()
 
-    fun <T : Component> addComponent(component: T, x: Int, y: Int): T {
+    fun <T : Component> addComponent(component: T, x: Int = -1, y: Int = -1): T {
         // Check bounds
         val child = Child(component, x, y)
-        checkCandidate(child)
+        if (x != -1 && y != -1) checkCandidate(child)
         children.add(child)
         component.parent = this
         component.update()
@@ -54,7 +56,18 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
             update()
         }
 
+    fun layout(strategy: LayoutStrategy) {
+        val newChildren = strategy.layout(children.map { it.component }, dimensions)
+        children.clear()
+        children.addAll(newChildren)
+    }
+
+    fun flexLayout(direction: FlexLayout.Direction, justify: FlexLayout.Justify, align: FlexLayout.Justify) {
+        layout(FlexLayout(direction, justify, align))
+    }
+
     override fun render(): Solid {
+        if (children.any { it.x == -1 && it.y == -1 }) error("Must call layout()!")
         val renderer = FluidRenderer(this)
         background?.let { renderer.fill(it) }
         for (child in children) {
