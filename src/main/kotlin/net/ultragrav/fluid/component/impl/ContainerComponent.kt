@@ -31,7 +31,7 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         if (x != -1 && y != -1) checkCandidate(child)
         children.add(child)
         component.parent = this
-        component.update()
+        if (x != -1 && y != -1) component.update()
         return component
     }
 
