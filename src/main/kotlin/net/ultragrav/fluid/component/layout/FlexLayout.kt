@@ -8,7 +8,7 @@ class FlexLayout(
     val direction: Direction = Direction.HORIZONTAL,
     val justify: Justify = Justify.START,
     val align: Justify = Justify.START,
-    val wrap: Boolean = false
+    val wrap: Boolean = true
 ) : LayoutStrategy {
 
     enum class Direction {
