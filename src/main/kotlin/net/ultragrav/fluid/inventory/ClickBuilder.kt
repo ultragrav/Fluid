@@ -17,6 +17,7 @@ class ClickBuilder {
     fun right(click: InventoryClickEvent.() -> Unit) = assign(RIGHT_CLICKS, click)
     fun shiftRight(click: InventoryClickEvent.() -> Unit) = assign(ClickType.SHIFT_RIGHT, click)
     fun middle(click: InventoryClickEvent.() -> Unit) = assign(ClickType.MIDDLE, click)
+    fun drop(click: InventoryClickEvent.() -> Unit) = assign(ClickType.DROP, click)
 
     fun assign(type: ClickType, click: InventoryClickEvent.() -> Unit): ClickBuilder {
         clickHandlers[type] = click
