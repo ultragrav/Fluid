@@ -1,5 +1,6 @@
 package net.ultragrav.fluid.component.impl
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component
 import net.ultragrav.fluid.component.Component
 import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.component.layout.FlexLayout
@@ -10,14 +11,16 @@ import net.ultragrav.fluid.inventory.shape.Shape
 import net.ultragrav.fluid.render.FluidRenderer
 import net.ultragrav.fluid.render.Solid
 import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 open class ContainerComponent(size: Dimensions) : Component(size) {
 
-    private val children: MutableList<Child> = ArrayList()
+    private var layoutStrategy: LayoutStrategy? = null
+    private var dynamicRenderer: (ContainerComponent.() -> Unit)? = null
+    private val children0: MutableList<Child> = ArrayList()
+    val children get() = children0.toList()
 
     override val root: ContainerComponent
         get() {
@@ -25,14 +28,23 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
             return parent.root
         }
 
+    fun dynamic(builder: ContainerComponent.() -> Unit) {
+        dynamicRenderer = builder
+    }
+
     fun <T : Component> addComponent(component: T, x: Int = -1, y: Int = -1): T {
         // Check bounds
         val child = Child(component, x, y)
         if (x != -1 && y != -1) checkCandidate(child)
-        children.add(child)
+        children0.add(child)
         component.parent = this
         if (x != -1 && y != -1) component.update()
         return component
+    }
+
+    fun removeComponent(component: Component) {
+        val child = children0.firstOrNull { it.component == component } ?: return
+        children0.remove(child)
     }
 
     fun button(x: Int = -1, y: Int = -1, builder: RendererComponent.Builder.() -> Unit) {
@@ -51,7 +63,7 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         val maxY = candidate.y + candidate.component.dimensions.height
         require(maxX <= dimensions.width && maxY <= dimensions.height) { "Out of bounds!" }
 
-        val occupied = children.flatMap {
+        val occupied = children0.flatMap {
             Rectangle(it.component.dimensions, it.x, it.y)
                 .iterator(dimensions).asSequence().toSet()
         }.toSet()
@@ -69,9 +81,7 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         }
 
     fun layout(strategy: LayoutStrategy) {
-        val newChildren = strategy.layout(children.map { it.component }, dimensions)
-        children.clear()
-        children.addAll(newChildren)
+        layoutStrategy = strategy
     }
 
     fun flexLayout(
@@ -83,11 +93,31 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         layout(FlexLayout(direction, justify, align, wrap))
     }
 
+    fun layoutImmediate(strategy: LayoutStrategy) {
+        layoutStrategy = strategy
+        doLayout()
+    }
+
+    private fun doLayout() {
+        val layout = layoutStrategy ?: return
+        val newChildren = layout.layout(children0.map { it.component }, dimensions)
+        children0.clear()
+        children0.addAll(newChildren)
+        check(children0.none { it.x == -1 || it.y == -1 }) { "Layout failed!" }
+    }
+
+    private fun doDynamicSetup() {
+        val renderer = dynamicRenderer ?: return
+        children0.clear()
+        renderer()
+    }
+
     override fun render(): Solid {
-        if (children.any { it.x == -1 && it.y == -1 }) error("Must call layout()!")
+        doDynamicSetup()
+        if (children0.any { it.x == -1 && it.y == -1 }) doLayout()
         val renderer = FluidRenderer(this)
         background?.let { renderer.fill(it) }
-        for (child in children) {
+        for (child in children0) {
             val solid = child.component.render()
             renderer.drawSolid(child.x, child.y, solid)
         }
@@ -95,7 +125,7 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
     }
 
     open fun updateChild(childComponent: Component, area: Shape, solid: Solid) {
-        val child = children.first { it.component == childComponent }
+        val child = children0.first { it.component == childComponent }
         val newArea = area.shift(child.x, child.y)
         update(newArea, solid)
     }
@@ -103,11 +133,11 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
     override fun click(x: Int, y: Int, clickEvent: InventoryClickEvent) {
         if (x == -1) {
             // Own inventory click
-            children.forEach { it.component.click(x, y, clickEvent) }
+            children0.forEach { it.component.click(x, y, clickEvent) }
             return
         }
 
-        for (child in children) {
+        for (child in children0) {
             if (
                 x in child.x..<child.x + child.component.dimensions.width &&
                 y in child.y..<child.y + child.component.dimensions.height
@@ -120,12 +150,12 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
 
     override fun onClose(event: InventoryCloseEvent) {
         super.onClose(event)
-        children.forEach { it.component.onClose(event) }
+        children0.forEach { it.component.onClose(event) }
     }
 
     override fun onOpen(player: HumanEntity) {
         super.onOpen(player)
-        children.forEach { it.component.onOpen(player) }
+        children0.forEach { it.component.onOpen(player) }
     }
 
     fun asGui(title: net.kyori.adventure.text.Component): FluidGui {
