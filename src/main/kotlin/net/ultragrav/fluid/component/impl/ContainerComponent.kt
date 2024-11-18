@@ -114,7 +114,8 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
 
     override fun render(): Solid {
         doDynamicSetup()
-        if (children0.any { it.x == -1 && it.y == -1 }) doLayout()
+        if (children0.any { it.x == -1 || it.y == -1 }) doLayout()
+        if (children0.any { it.x == -1 || it.y == -1 }) throw IllegalStateException("Layout failed!")
         val renderer = FluidRenderer(this)
         background?.let { renderer.fill(it) }
         for (child in children0) {
