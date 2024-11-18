@@ -148,6 +148,7 @@ class FlexLayout(
             }
             Justify.SPACE_EVENLY -> {
                 val space = limit - group.size
+                if (space % (group.members.size + 1) != 0) return flex(group, Justify.SPACE_AROUND, limit)
                 val gap = space / (group.members.size + 1).coerceAtLeast(1)
                 var acc = gap
                 for (item in group.members) {
