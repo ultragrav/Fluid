@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.9.0"
+    kotlin("jvm") version "2.1.0"
     `maven-publish`
 
 }
@@ -28,4 +28,7 @@ publishing {
             from(components["java"])
         }
     }
+}
+kotlin {
+    jvmToolchain(21)
 }

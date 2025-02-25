@@ -15,6 +15,7 @@ open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions
     val inv = Inventory(Util.inventoryTypeForSize(rows * 9), title)
 
     init {
+        inv.setTag(Events.GUI_TAG, this)
         initializeSelfParent()
     }
 
