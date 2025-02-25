@@ -1,6 +1,9 @@
 package net.ultragrav.fluid.component.impl
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component
+import net.minestom.server.entity.Player
+import net.minestom.server.event.inventory.InventoryCloseEvent
+import net.minestom.server.event.inventory.InventoryPreClickEvent
+import net.minestom.server.item.ItemStack
 import net.ultragrav.fluid.component.Component
 import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.component.layout.FlexLayout
@@ -10,10 +13,6 @@ import net.ultragrav.fluid.inventory.shape.Rectangle
 import net.ultragrav.fluid.inventory.shape.Shape
 import net.ultragrav.fluid.render.FluidRenderer
 import net.ultragrav.fluid.render.Solid
-import org.bukkit.entity.HumanEntity
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.inventory.ItemStack
 
 open class ContainerComponent(size: Dimensions) : Component(size) {
 
@@ -74,7 +73,7 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         require(areaOccupied.intersect(occupied).isEmpty()) { "Overlapping component!" }
     }
 
-    var background: ItemStack? = null
+    var background: ItemStack = ItemStack.AIR
         set(value) {
             field = value
             update()
@@ -131,7 +130,7 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         update(newArea, solid)
     }
 
-    override fun click(x: Int, y: Int, clickEvent: InventoryClickEvent) {
+    override fun click(x: Int, y: Int, clickEvent: InventoryPreClickEvent) {
         if (x == -1) {
             // Own inventory click
             children0.forEach { it.component.click(x, y, clickEvent) }
@@ -154,7 +153,7 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         children0.forEach { it.component.onClose(event) }
     }
 
-    override fun onOpen(player: HumanEntity) {
+    override fun onOpen(player: Player) {
         super.onOpen(player)
         children0.forEach { it.component.onOpen(player) }
     }

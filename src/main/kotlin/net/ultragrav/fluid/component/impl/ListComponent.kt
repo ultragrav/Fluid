@@ -4,17 +4,17 @@ import net.ultragrav.fluid.component.Component
 import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.inventory.shape.Lines
 import net.ultragrav.fluid.render.Solid
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.ItemStack
+import net.minestom.server.event.inventory.InventoryPreClickEvent
+import net.minestom.server.item.ItemStack
 import kotlin.math.max
 import kotlin.math.min
 
 open class ListComponent<T>(
     size: Dimensions,
     val renderer: (T) -> ItemStack,
-    val clickHandler: (Int, T, InventoryClickEvent) -> Unit = { _, _, _ -> },
+    val clickHandler: (Int, T, InventoryPreClickEvent) -> Unit = { _, _, _ -> },
     private val backingList: MutableList<T> = ArrayList(),
-    private val emptyElement: ItemStack? = null
+    private val emptyElement: ItemStack = ItemStack.AIR
 ) : Component(size), MutableList<T> by backingList {
     var offset: Int = 0
         set(value) {
@@ -23,7 +23,7 @@ open class ListComponent<T>(
         }
 
     override fun render(): Solid {
-        val items = ArrayList<ItemStack?>(dimensions.size)
+        val items = ArrayList<ItemStack>(dimensions.size)
         items.addAll(this.subList(offset, min(offset + dimensions.size, size)).map(renderer))
         items.addAll(List(dimensions.size - items.size) { emptyElement })
         return Solid(dimensions.width, dimensions.height, items)
@@ -36,7 +36,7 @@ open class ListComponent<T>(
         val shape = Lines(dimensions, 0, 0, renderOffset, renderLength)
 
         // Render the elements that changed, including nulls after the list
-        val elements = ArrayList<ItemStack?>(renderLength)
+        val elements = ArrayList<ItemStack>(renderLength)
         elements.addAll(this.subList(range.first + offset, min(range.first + offset + renderLength, size)).map(renderer))
         elements.addAll(List(renderLength - elements.size) { emptyElement })
 
@@ -44,7 +44,7 @@ open class ListComponent<T>(
         update(shape, solid)
     }
 
-    override fun click(x: Int, y: Int, clickEvent: InventoryClickEvent) {
+    override fun click(x: Int, y: Int, clickEvent: InventoryPreClickEvent) {
         val index = x + y * dimensions.width + offset
         if (index < 0 || index >= size) return
         clickHandler(index, this[index], clickEvent)
@@ -59,24 +59,24 @@ open class ListComponent<T>(
 
     override fun add(element: T): Boolean {
         val ret = backingList.add(element)
-        updateElements(size - 1..<size)
+        updateElements(size - 1 until size)
         return ret
     }
 
     override fun add(index: Int, element: T) {
         backingList.add(index, element)
-        updateElements(index..<size)
+        updateElements(index until size)
     }
 
     override fun addAll(index: Int, elements: Collection<T>): Boolean {
         val ret = backingList.addAll(index, elements)
-        updateElements(index..<size)
+        updateElements(index until size)
         return ret
     }
 
     override fun addAll(elements: Collection<T>): Boolean {
         val ret = backingList.addAll(elements)
-        updateElements(size - elements.size..<size)
+        updateElements(size - elements.size until size)
         return ret
     }
 

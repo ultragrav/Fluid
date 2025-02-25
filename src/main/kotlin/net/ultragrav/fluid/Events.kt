@@ -1,47 +1,35 @@
 package net.ultragrav.fluid
 
+import net.minestom.server.MinecraftServer
+import net.minestom.server.event.inventory.InventoryCloseEvent
+import net.minestom.server.event.inventory.InventoryPreClickEvent
+import net.minestom.server.tag.Tag
 import net.ultragrav.fluid.inventory.FluidGui
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.event.inventory.InventoryDragEvent
 
-class Events : Listener {
-    @EventHandler
-    fun onClick(event: InventoryClickEvent) {
-        val inv = event.inventory
-        if (inv.holder is FluidGui.Holder) {
-            event.isCancelled = true
+object Events {
+    val GUI_TAG = Tag.Transient<FluidGui>("fluid_gui")
 
-            val gui = (inv.holder as FluidGui.Holder).gui
-            if (event.clickedInventory == inv) {
-                val x = event.slot % 9
-                val y = event.slot / 9
-                gui.click(x, y, event)
-            } else {
-                gui.click(-1, -1, event)
+    fun register() {
+        MinecraftServer.getGlobalEventHandler()
+            .addListener(InventoryPreClickEvent::class.java) { event ->
+                val inv = event.inventory
+                val gui = event.player.openInventory?.getTag(GUI_TAG) ?: return@addListener
+
+                event.isCancelled = true
+
+                if (event.slot < inv.size) { // TODO: CHECK THIS WORKS
+                    val x = event.slot % 9
+                    val y = event.slot / 9
+                    gui.click(x, y, event)
+                } else {
+                    gui.click(-1, -1, event)
+                }
             }
-        }
-    }
+            .addListener(InventoryCloseEvent::class.java) { event ->
+                val inv = event.inventory
+                val gui = inv.getTag(GUI_TAG) ?: return@addListener
 
-    @EventHandler
-    fun onDrag(event: InventoryDragEvent) {
-        val inv = event.inventory
-        if (inv.holder is FluidGui.Holder) {
-            event.isCancelled = true
-
-            val gui = (inv.holder as FluidGui.Holder).gui
-            gui.onDrag(event)
-        }
-    }
-
-    @EventHandler
-    fun onClose(event: InventoryCloseEvent) {
-        val inv = event.inventory
-        if (inv.holder is FluidGui.Holder) {
-            val gui = (inv.holder as FluidGui.Holder).gui
-            gui.onClose(event)
-        }
+                gui.onClose(event)
+            }
     }
 }

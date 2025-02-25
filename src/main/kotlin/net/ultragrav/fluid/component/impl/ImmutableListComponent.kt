@@ -4,17 +4,17 @@ import net.ultragrav.fluid.component.Component
 import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.inventory.shape.Lines
 import net.ultragrav.fluid.render.Solid
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.ItemStack
+import net.minestom.server.event.inventory.InventoryPreClickEvent
+import net.minestom.server.item.ItemStack
 import kotlin.math.max
 import kotlin.math.min
 
 open class ImmutableListComponent<T>(
     dimensions: Dimensions,
     val renderer: (T) -> ItemStack,
-    val clickHandler: (Int, T, InventoryClickEvent) -> Unit = { _, _, _ -> },
+    val clickHandler: (Int, T, InventoryPreClickEvent) -> Unit = { _, _, _ -> },
     private val list: List<T>,
-    private val emptyElement: ItemStack? = null
+    private val emptyElement: ItemStack = ItemStack.AIR
 ) : Component(dimensions) {
     var offset: Int = 0
         set(value) {
@@ -23,13 +23,13 @@ open class ImmutableListComponent<T>(
         }
 
     override fun render(): Solid {
-        val items = ArrayList<ItemStack?>(dimensions.size)
+        val items = ArrayList<ItemStack>(dimensions.size)
         items.addAll(list.subList(offset, min(offset + dimensions.size, list.size)).map(renderer))
         items.addAll(List(dimensions.size - items.size) { emptyElement })
         return Solid(dimensions.width, dimensions.height, items)
     }
 
-    override fun click(x: Int, y: Int, clickEvent: InventoryClickEvent) {
+    override fun click(x: Int, y: Int, clickEvent: InventoryPreClickEvent) {
         val index = x + y * dimensions.width + offset
         if (index < 0 || index >= list.size) return
         clickHandler(index, list[index], clickEvent)

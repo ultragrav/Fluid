@@ -1,13 +1,14 @@
 package net.ultragrav.fluid.component.impl
 
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.minestom.server.event.inventory.InventoryPreClickEvent
+import net.minestom.server.item.ItemStack
+import net.minestom.server.item.Material
 import net.ultragrav.fluid.component.dimensions.Box
 import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.component.dimensions.Point
 import net.ultragrav.fluid.inventory.ClickBuilder
-import org.bukkit.Material
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.ItemStack
 import kotlin.math.ceil
 
 class ActionableListComponent(
@@ -16,7 +17,8 @@ class ActionableListComponent(
     previousPageButtonLocation: Point,
     nextPageButtonLocation: Point
 ) : ContainerComponent(dimensions) {
-    private val actionList = addComponent(ListComponent<Action>(
+    private val actionList = addComponent(
+        ListComponent<Action>(
         actionArea.dimensions,
         { it.item },
         { _, el, ev -> el.action(ev) }
@@ -31,30 +33,22 @@ class ActionableListComponent(
             updatePageButtons()
         }
 
-    private val previousPageButton = addComponent(ButtonComponent(
-        ItemStack(Material.ARROW)
-            .also {
-                it.itemMeta = it.itemMeta.also { meta ->
-                    meta.displayName(
-                        net.kyori.adventure.text.Component.text("Previous Page", NamedTextColor.GRAY)
-                    )
-                }
-            },
+    private val previousPageButton = addComponent(
+        ButtonComponent(
+        ItemStack.builder(Material.ARROW)
+            .customName(Component.text("Previous Page", NamedTextColor.GRAY))
+            .build(),
         clickHandler = { ev ->
             ev.isCancelled = true
             page--
         }
     ), previousPageButtonLocation.x, previousPageButtonLocation.y)
 
-    private val nextPageButton = addComponent(ButtonComponent(
-        ItemStack(Material.ARROW)
-            .also {
-                it.itemMeta = it.itemMeta.also { meta ->
-                    meta.displayName(
-                        net.kyori.adventure.text.Component.text("Next Page", NamedTextColor.GRAY)
-                    )
-                }
-            },
+    private val nextPageButton = addComponent(
+        ButtonComponent(
+        ItemStack.builder(Material.ARROW)
+            .customName(Component.text("Next Page", NamedTextColor.GRAY))
+            .build(),
         clickHandler = { ev ->
             ev.isCancelled = true
             page++
@@ -71,5 +65,5 @@ class ActionableListComponent(
         updatePageButtons()
     }
 
-    private data class Action(val item: ItemStack, val action: (InventoryClickEvent) -> Unit)
+    private data class Action(val item: ItemStack, val action: (InventoryPreClickEvent) -> Unit)
 }

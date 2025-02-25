@@ -5,16 +5,15 @@ plugins {
 }
 
 group = "net.ultragrav"
-version = "1.0.15"
+version = "1.0.15-minestom"
 
 repositories {
     mavenCentral()
-    maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
-    compileOnly("net.kyori:adventure-api:4.14.0")
+    compileOnly("net.minestom:minestom-snapshots:32735340d7")
+    compileOnly("net.kyori:adventure-api")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.3")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.3")
 }

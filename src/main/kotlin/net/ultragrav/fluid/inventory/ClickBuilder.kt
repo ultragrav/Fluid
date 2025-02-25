@@ -1,40 +1,33 @@
 package net.ultragrav.fluid.inventory
 
-import org.bukkit.event.inventory.ClickType
-import org.bukkit.event.inventory.InventoryClickEvent
+import net.minestom.server.event.inventory.InventoryPreClickEvent
+import net.minestom.server.inventory.click.ClickType
 
 class ClickBuilder {
-    companion object {
-        private val LEFT_CLICKS = arrayOf(ClickType.LEFT, ClickType.SHIFT_LEFT)
-        private val RIGHT_CLICKS = arrayOf(ClickType.RIGHT, ClickType.SHIFT_RIGHT)
-    }
+    private var default: (InventoryPreClickEvent) -> Unit = { it.isCancelled = true }
+    private val clickHandlers = mutableMapOf<ClickType, (InventoryPreClickEvent) -> Unit>()
 
-    private var default: (InventoryClickEvent) -> Unit = { it.isCancelled = true }
-    private val clickHandlers = mutableMapOf<ClickType, (InventoryClickEvent) -> Unit>()
+    fun left(click: InventoryPreClickEvent.() -> Unit) = assign(ClickType.LEFT_CLICK, click)
+    fun right(click: InventoryPreClickEvent.() -> Unit) = assign(ClickType.RIGHT_CLICK, click)
+    fun shift(click: InventoryPreClickEvent.() -> Unit) = assign(ClickType.SHIFT_CLICK, click)
+    fun drop(click: InventoryPreClickEvent.() -> Unit) = assign(ClickType.DROP, click)
 
-    fun left(click: InventoryClickEvent.() -> Unit) = assign(LEFT_CLICKS, click)
-    fun shiftLeft(click: InventoryClickEvent.() -> Unit) = assign(ClickType.SHIFT_LEFT, click)
-    fun right(click: InventoryClickEvent.() -> Unit) = assign(RIGHT_CLICKS, click)
-    fun shiftRight(click: InventoryClickEvent.() -> Unit) = assign(ClickType.SHIFT_RIGHT, click)
-    fun middle(click: InventoryClickEvent.() -> Unit) = assign(ClickType.MIDDLE, click)
-    fun drop(click: InventoryClickEvent.() -> Unit) = assign(ClickType.DROP, click)
-
-    fun assign(type: ClickType, click: InventoryClickEvent.() -> Unit): ClickBuilder {
+    fun assign(type: ClickType, click: InventoryPreClickEvent.() -> Unit): ClickBuilder {
         clickHandlers[type] = click
         return this
     }
 
-    fun assign(types: Array<ClickType>, click: InventoryClickEvent.() -> Unit): ClickBuilder {
+    fun assign(types: Array<ClickType>, click: InventoryPreClickEvent.() -> Unit): ClickBuilder {
         types.forEach { clickHandlers[it] = click }
         return this
     }
 
-    fun default(click: InventoryClickEvent.() -> Unit): ClickBuilder {
+    fun default(click: InventoryPreClickEvent.() -> Unit): ClickBuilder {
         default = click
         return this
     }
 
-    fun build(): (InventoryClickEvent) -> Unit {
-        return { (clickHandlers[it.click] ?: default)(it) }
+    fun build(): (InventoryPreClickEvent) -> Unit {
+        return { (clickHandlers[it.clickType] ?: default)(it) }
     }
 }

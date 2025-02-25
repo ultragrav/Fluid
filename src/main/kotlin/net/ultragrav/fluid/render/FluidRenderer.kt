@@ -1,16 +1,16 @@
 package net.ultragrav.fluid.render
 
+import net.minestom.server.item.ItemStack
 import net.ultragrav.fluid.component.Component
 import net.ultragrav.fluid.component.dimensions.Dimensions
-import org.bukkit.inventory.ItemStack
 
 class FluidRenderer(val width: Int, val height: Int) {
     constructor(dimensions: Dimensions) : this(dimensions.width, dimensions.height)
     constructor(component: Component) : this(component.dimensions)
 
-    private val elements = Array<ItemStack?>(width * height) { null }
+    private val elements = Array<ItemStack>(width * height) { ItemStack.AIR }
 
-    fun drawElement(x: Int, y: Int, element: ItemStack?) {
+    fun drawElement(x: Int, y: Int, element: ItemStack) {
         elements[y * width + x] = element
     }
 

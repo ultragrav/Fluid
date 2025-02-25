@@ -1,14 +1,13 @@
 package net.ultragrav.fluid.component
 
+import net.minestom.server.entity.Player
+import net.minestom.server.event.inventory.InventoryCloseEvent
+import net.minestom.server.event.inventory.InventoryPreClickEvent
 import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.component.impl.ContainerComponent
 import net.ultragrav.fluid.inventory.shape.Rectangle
 import net.ultragrav.fluid.inventory.shape.Shape
 import net.ultragrav.fluid.render.Solid
-import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.inventory.InventoryCloseEvent
 
 abstract class Component(val dimensions: Dimensions) {
     lateinit var parent: ContainerComponent
@@ -17,9 +16,9 @@ abstract class Component(val dimensions: Dimensions) {
         get() = parent.root
 
     abstract fun render(): Solid
-    abstract fun click(x: Int, y: Int, clickEvent: InventoryClickEvent)
+    abstract fun click(x: Int, y: Int, clickEvent: InventoryPreClickEvent)
 
-    open fun onOpen(player: HumanEntity) {}
+    open fun onOpen(player: Player) {}
     open fun onClose(event: InventoryCloseEvent) {}
 
     open fun update(area: Shape = Rectangle(dimensions), solid: Solid = render()) {
