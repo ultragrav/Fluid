@@ -9,7 +9,7 @@ class ClickBuilder {
 
     fun left(click: InventoryPreClickEvent.() -> Unit) = assign(ClickType.LEFT_CLICK, click)
     fun right(click: InventoryPreClickEvent.() -> Unit) = assign(ClickType.RIGHT_CLICK, click)
-    fun shift(click: InventoryPreClickEvent.() -> Unit) = assign(ClickType.SHIFT_CLICK, click)
+    fun shift(click: InventoryPreClickEvent.() -> Unit) = assign(ClickType.START_SHIFT_CLICK, click)
     fun drop(click: InventoryPreClickEvent.() -> Unit) = assign(ClickType.DROP, click)
 
     fun assign(type: ClickType, click: InventoryPreClickEvent.() -> Unit): ClickBuilder {

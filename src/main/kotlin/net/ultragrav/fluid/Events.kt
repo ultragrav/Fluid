@@ -26,7 +26,7 @@ object Events {
                 }
             }
             .addListener(InventoryCloseEvent::class.java) { event ->
-                val inv = event.inventory
+                val inv = event.inventory ?: return@addListener // Contrary to the annotation, this IS nullable (for closing own inventory)
                 val gui = inv.getTag(GUI_TAG) ?: return@addListener
 
                 gui.onClose(event)
