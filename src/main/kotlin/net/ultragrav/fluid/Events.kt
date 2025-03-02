@@ -12,8 +12,8 @@ object Events {
     fun register() {
         MinecraftServer.getGlobalEventHandler()
             .addListener(InventoryPreClickEvent::class.java) { event ->
-                val inv = event.inventory
-                val gui = event.player.openInventory?.getTag(GUI_TAG) ?: return@addListener
+                val inv = event.player.openInventory ?: return@addListener
+                val gui = inv.getTag(GUI_TAG) ?: return@addListener
 
                 event.isCancelled = true
 
