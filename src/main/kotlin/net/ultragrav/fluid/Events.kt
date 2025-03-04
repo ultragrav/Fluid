@@ -17,7 +17,7 @@ object Events {
 
                 event.isCancelled = true
 
-                if (event.slot < inv.size) { // TODO: CHECK THIS WORKS
+                if (event.inventory != null) {
                     val x = event.slot % 9
                     val y = event.slot / 9
                     gui.click(x, y, event)
