@@ -65,5 +65,9 @@ class ActionableListComponent(
         updatePageButtons()
     }
 
+    init {
+        updatePageButtons()
+    }
+
     private data class Action(val item: ItemStack, val action: (InventoryPreClickEvent) -> Unit)
 }
