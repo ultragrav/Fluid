@@ -158,10 +158,5 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         children0.forEach { it.component.onOpen(player) }
     }
 
-    fun asGui(title: net.kyori.adventure.text.Component): FluidGui {
-        return FluidGui(title, dimensions.height)
-            .also { it.addComponent(this, 0, 0) }
-    }
-
     class Child(val component: Component, val x: Int, val y: Int)
 }
