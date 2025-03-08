@@ -4,15 +4,17 @@ import net.kyori.adventure.text.Component
 import net.minestom.server.entity.Player
 import net.minestom.server.event.inventory.InventoryCloseEvent
 import net.minestom.server.inventory.Inventory
+import net.minestom.server.inventory.InventoryType
 import net.ultragrav.fluid.Events
 import net.ultragrav.fluid.Util
+import net.ultragrav.fluid.Util.dimensions
 import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.component.impl.ContainerComponent
 import net.ultragrav.fluid.inventory.shape.Shape
 import net.ultragrav.fluid.render.Solid
 
-open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions(9, rows)) {
-    val inv = Inventory(Util.inventoryTypeForSize(rows * 9), title)
+open class FluidGui(title: Component, type: InventoryType) : ContainerComponent(type.dimensions) {
+    val inv = Inventory(type, title)
 
     init {
         inv.setTag(Events.GUI_TAG, this)
@@ -26,7 +28,6 @@ open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions
     }
 
     fun open(player: Player) {
-        // TODO: Check if this isn't already fixed in minestom
         player.openInventory?.getTag(Events.GUI_TAG)?.onClose(InventoryCloseEvent(player.openInventory!!, player))
 
         update()
