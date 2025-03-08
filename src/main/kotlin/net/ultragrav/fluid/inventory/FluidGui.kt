@@ -14,6 +14,8 @@ import net.ultragrav.fluid.inventory.shape.Shape
 import net.ultragrav.fluid.render.Solid
 
 open class FluidGui(title: Component, type: InventoryType) : ContainerComponent(type.dimensions) {
+    constructor(title: Component, rows: Int) : this(title, Util.inventoryTypeForSize(rows * 9))
+
     val inv = Inventory(type, title)
 
     init {
