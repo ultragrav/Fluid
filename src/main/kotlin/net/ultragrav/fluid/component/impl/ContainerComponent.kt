@@ -1,14 +1,13 @@
 package net.ultragrav.fluid.component.impl
 
 import net.minestom.server.entity.Player
-import net.minestom.server.event.inventory.InventoryCloseEvent
 import net.minestom.server.event.inventory.InventoryPreClickEvent
 import net.minestom.server.item.ItemStack
+import net.ultragrav.fluid.InventoryCloseInfo
 import net.ultragrav.fluid.component.Component
 import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.component.layout.FlexLayout
 import net.ultragrav.fluid.component.layout.LayoutStrategy
-import net.ultragrav.fluid.inventory.FluidGui
 import net.ultragrav.fluid.inventory.shape.Rectangle
 import net.ultragrav.fluid.inventory.shape.Shape
 import net.ultragrav.fluid.render.FluidRenderer
@@ -148,7 +147,7 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         }
     }
 
-    override fun onClose(event: InventoryCloseEvent) {
+    override fun onClose(event: InventoryCloseInfo) {
         super.onClose(event)
         children0.forEach { it.component.onClose(event) }
     }

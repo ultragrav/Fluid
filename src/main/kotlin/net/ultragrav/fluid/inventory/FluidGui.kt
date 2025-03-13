@@ -6,9 +6,9 @@ import net.minestom.server.event.inventory.InventoryCloseEvent
 import net.minestom.server.inventory.Inventory
 import net.minestom.server.inventory.InventoryType
 import net.ultragrav.fluid.Events
+import net.ultragrav.fluid.InventoryCloseInfo
 import net.ultragrav.fluid.Util
 import net.ultragrav.fluid.Util.dimensions
-import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.component.impl.ContainerComponent
 import net.ultragrav.fluid.inventory.shape.Shape
 import net.ultragrav.fluid.render.Solid
@@ -16,7 +16,7 @@ import net.ultragrav.fluid.render.Solid
 open class FluidGui(title: Component, type: InventoryType) : ContainerComponent(type.dimensions) {
     constructor(title: Component, rows: Int) : this(title, Util.inventoryTypeForSize(rows * 9))
 
-    val inv = Inventory(type, title)
+    val inv = FluidInventory(this, type, title)
 
     init {
         inv.setTag(Events.GUI_TAG, this)
@@ -30,8 +30,6 @@ open class FluidGui(title: Component, type: InventoryType) : ContainerComponent(
     }
 
     fun open(player: Player) {
-        player.openInventory?.getTag(Events.GUI_TAG)?.onClose(InventoryCloseEvent(player.openInventory!!, player))
-
         update()
         player.openInventory(inv)
         onOpen(player)

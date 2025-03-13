@@ -1,8 +1,8 @@
 package net.ultragrav.fluid.component
 
 import net.minestom.server.entity.Player
-import net.minestom.server.event.inventory.InventoryCloseEvent
 import net.minestom.server.event.inventory.InventoryPreClickEvent
+import net.ultragrav.fluid.InventoryCloseInfo
 import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.component.impl.ContainerComponent
 import net.ultragrav.fluid.inventory.shape.Rectangle
@@ -19,7 +19,7 @@ abstract class Component(val dimensions: Dimensions) {
     abstract fun click(x: Int, y: Int, clickEvent: InventoryPreClickEvent)
 
     open fun onOpen(player: Player) {}
-    open fun onClose(event: InventoryCloseEvent) {}
+    open fun onClose(event: InventoryCloseInfo) {}
 
     open fun update(area: Shape = Rectangle(dimensions), solid: Solid = render()) {
         // Not initialized yet, this update will be superseded by the one called by the parent
