@@ -17,7 +17,7 @@ object Events {
 
                 event.isCancelled = true
 
-                if (event.inventory != null) {
+                if (event.inventory != null && event.inventory != event.player.inventory) {
                     val x = event.slot % gui.dimensions.width
                     val y = event.slot / gui.dimensions.width
                     gui.click(x, y, event)
