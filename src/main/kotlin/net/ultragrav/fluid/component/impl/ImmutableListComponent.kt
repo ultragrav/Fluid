@@ -13,7 +13,7 @@ open class ImmutableListComponent<T>(
     dimensions: Dimensions,
     val renderer: (T) -> ItemStack,
     val clickHandler: (Int, T, InventoryPreClickEvent) -> Unit = { _, _, _ -> },
-    private val list: List<T>,
+    val list: List<T>,
     private val emptyElement: ItemStack = ItemStack.AIR
 ) : Component(dimensions) {
     var offset: Int = 0
