@@ -22,6 +22,12 @@ abstract class Component(val dimensions: Dimensions) {
     open fun onOpen(player: HumanEntity) {}
     open fun onClose(event: InventoryCloseEvent) {}
 
+    open fun updateRoot() {
+        if (!::parent.isInitialized) return
+        if (parent == this) update()
+        else parent.updateRoot()
+    }
+
     open fun update(area: Shape = Rectangle(dimensions), solid: Solid = render()) {
         // Not initialized yet, this update will be superseded by the one called by the parent
         if (!::parent.isInitialized) return

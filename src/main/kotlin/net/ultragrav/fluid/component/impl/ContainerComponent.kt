@@ -99,7 +99,7 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
     }
 
     private fun doLayout() {
-        val layout = layoutStrategy ?: return
+        val layout = layoutStrategy ?: FlexLayout()
         val newChildren = layout.layout(children0.map { it.component }, dimensions)
         children0.clear()
         children0.addAll(newChildren)
@@ -115,7 +115,13 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
     override fun render(): Solid {
         doDynamicSetup()
         if (children0.any { it.x == -1 || it.y == -1 }) doLayout()
-        if (children0.any { it.x == -1 || it.y == -1 }) throw IllegalStateException("Layout failed!")
+        if (children0.any { it.x == -1 || it.y == -1 }) {
+            if (layoutStrategy == null) {
+                error("No layout strategy, yet some components have no position set!")
+            } else {
+                error("Layout failed!")
+            }
+        }
         val renderer = FluidRenderer(this)
         background?.let { renderer.fill(it) }
         for (child in children0) {
