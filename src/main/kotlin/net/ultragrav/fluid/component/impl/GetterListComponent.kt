@@ -22,7 +22,7 @@ open class GetterListComponent<T>(
             update()
         }
 
-    private var list: List<T> = listGetter()
+    var list: List<T> = listGetter()
 
     override fun render(): Solid {
         list = listGetter()
