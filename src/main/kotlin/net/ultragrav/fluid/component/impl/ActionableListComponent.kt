@@ -8,7 +8,6 @@ import net.minestom.server.item.Material
 import net.ultragrav.fluid.component.dimensions.Box
 import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.component.dimensions.Point
-import net.ultragrav.fluid.inventory.ClickBuilder
 import kotlin.math.ceil
 
 class ActionableListComponent(
@@ -58,11 +57,6 @@ class ActionableListComponent(
     private fun updatePageButtons() {
         previousPageButton.active = page > 0
         nextPageButton.active = page < numPages - 1
-    }
-
-    fun addAction(item: ItemStack, actionBuilder: ClickBuilder.() -> Unit) {
-        actionList.add(Action(item, ClickBuilder().also(actionBuilder).build()))
-        updatePageButtons()
     }
 
     init {
