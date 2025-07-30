@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "net.ultragrav"
-version = "1.0.15"
+version = "1.0.16"
 
 repositories {
     mavenCentral()
@@ -15,6 +15,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
     compileOnly("net.kyori:adventure-api:4.14.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.3")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.3")
 }
