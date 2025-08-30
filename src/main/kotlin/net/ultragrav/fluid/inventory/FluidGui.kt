@@ -17,12 +17,14 @@ import net.ultragrav.fluid.component.impl.ContainerComponent
 import net.ultragrav.fluid.inventory.shape.Shape
 import net.ultragrav.fluid.render.Solid
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
+import org.bukkit.inventory.ItemStack
 import kotlin.coroutines.EmptyCoroutineContext
 
 open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions(9, rows)) {
@@ -108,5 +110,9 @@ open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions
         override fun getInventory(): Inventory {
             return inv
         }
+    }
+
+    companion object {
+        val TRANSPARENT = ItemStack(Material.AIR)
     }
 }

@@ -10,6 +10,7 @@ import net.ultragrav.fluid.inventory.shape.Rectangle
 import net.ultragrav.fluid.inventory.shape.Shape
 import net.ultragrav.fluid.render.FluidRenderer
 import net.ultragrav.fluid.render.Solid
+import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -21,6 +22,8 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
     private var dynamicRenderer: (ContainerComponent.() -> Unit)? = null
     private val children0: MutableList<Child> = ArrayList()
     val children get() = children0.toList()
+
+    var background: ItemStack? = FluidGui.TRANSPARENT
 
     override val root: ContainerComponent
         get() {
@@ -73,12 +76,6 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
 
         require(areaOccupied.intersect(occupied).isEmpty()) { "Overlapping component!" }
     }
-
-    var background: ItemStack? = null
-        set(value) {
-            field = value
-            update()
-        }
 
     fun layout(strategy: LayoutStrategy) {
         layoutStrategy = strategy

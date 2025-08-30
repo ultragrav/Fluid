@@ -2,9 +2,11 @@ package net.ultragrav.fluid.render
 
 import net.ultragrav.fluid.component.Component
 import net.ultragrav.fluid.component.dimensions.Dimensions
+import net.ultragrav.fluid.inventory.FluidGui
 import org.bukkit.inventory.ItemStack
 
 class FluidRenderer(val width: Int, val height: Int) {
+
     constructor(dimensions: Dimensions) : this(dimensions.width, dimensions.height)
     constructor(component: Component) : this(component.dimensions)
 
@@ -20,6 +22,8 @@ class FluidRenderer(val width: Int, val height: Int) {
                 val ex = x + i
                 val ey = y + j
                 if (ex < 0 || ex >= width || ey < 0 || ey >= height) continue
+                val element = solid.grid[j * solid.width + i]
+                if (element === FluidGui.TRANSPARENT) continue
                 drawElement(x + i, y + j, solid.grid[j * solid.width + i])
             }
         }

@@ -3,7 +3,9 @@ package net.ultragrav.fluid
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import net.ultragrav.fluid.inventory.FluidGui
 import org.bukkit.Bukkit
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
 object FluidAPI {
@@ -24,3 +26,5 @@ object FluidAPI {
         coroutineScope = scope
     }
 }
+
+fun ItemStack.isFluidTransparent() = this === FluidGui.TRANSPARENT
