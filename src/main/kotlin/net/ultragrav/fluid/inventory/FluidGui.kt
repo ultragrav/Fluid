@@ -3,11 +3,15 @@ package net.ultragrav.fluid.inventory
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.Component
+import net.ultragrav.fluid.FluidAPI
 import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.component.impl.ContainerComponent
 import net.ultragrav.fluid.inventory.shape.Shape
@@ -24,7 +28,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions(9, rows)) {
     val inv = Bukkit.createInventory(Holder(), rows * 9, title)
 
-    private var scope = CoroutineScope(EmptyCoroutineContext)
+    override var scope = FluidAPI.coroutineScope + SupervisorJob()
     private val tasks = mutableListOf<(CoroutineScope) -> Unit>()
 
     init {
@@ -40,6 +44,12 @@ open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions
             scope.launch(dispatcher) {
                 task()
             }
+        }
+    }
+
+    fun task(task: suspend () -> Unit) {
+        tasks.add {
+            scope.launch { task() }
         }
     }
 
@@ -80,7 +90,7 @@ open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions
     override fun onOpen(player: HumanEntity) {
         super.onOpen(player)
         if (inv.viewers.size == 1) {
-            scope = CoroutineScope(EmptyCoroutineContext)
+            scope = FluidAPI.coroutineScope + SupervisorJob()
             tasks.forEach { it(scope) }
         }
     }

@@ -1,5 +1,6 @@
 package net.ultragrav.fluid.component
 
+import kotlinx.coroutines.CoroutineScope
 import net.ultragrav.fluid.component.dimensions.Dimensions
 import net.ultragrav.fluid.component.impl.ContainerComponent
 import net.ultragrav.fluid.inventory.shape.Rectangle
@@ -15,6 +16,8 @@ abstract class Component(val dimensions: Dimensions) {
 
     open val root: ContainerComponent
         get() = parent.root
+
+    internal open val scope: CoroutineScope get() = parent.scope
 
     abstract fun render(): Solid
     abstract fun click(x: Int, y: Int, clickEvent: InventoryClickEvent)
