@@ -1,7 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.9.0"
+    kotlin("jvm") version "1.9.25"
     `maven-publish`
-
 }
 
 group = "net.ultragrav"
@@ -25,6 +24,10 @@ dependencies {
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+}
+
+kotlin {
+    jvmToolchain(21)
 }
 
 tasks.test {
