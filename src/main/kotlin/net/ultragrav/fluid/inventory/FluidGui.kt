@@ -1,10 +1,13 @@
 package net.ultragrav.fluid.inventory
 
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableJob
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -75,14 +78,24 @@ open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions
 
     open fun onDrag(event: InventoryDragEvent) {}
 
-    fun open(player: HumanEntity) {
+    fun open(player: HumanEntity): CompletableJob {
         val previous = player.openInventory.topInventory
         if (previous.holder is Holder) {
             (previous.holder as Holder).gui.onClose(InventoryCloseEvent(player.openInventory))
         }
+        val job = Job()
+        task {
+            try {
+                awaitCancellation()
+            } catch (e: CancellationException) {
+                job.complete()
+                throw e
+            }
+        }
         update()
         player.openInventory(inv)
         onOpen(player)
+        return job
     }
 
     fun closeAll() {
