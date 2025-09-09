@@ -112,13 +112,6 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
     override fun render(): Solid {
         doDynamicSetup()
         if (children0.any { it.x == -1 || it.y == -1 }) doLayout()
-        if (children0.any { it.x == -1 || it.y == -1 }) {
-            if (layoutStrategy == null) {
-                error("No layout strategy, yet some components have no position set!")
-            } else {
-                error("Layout failed!")
-            }
-        }
         val renderer = FluidRenderer(this)
         background?.let { renderer.fill(it) }
         for (child in children0) {
