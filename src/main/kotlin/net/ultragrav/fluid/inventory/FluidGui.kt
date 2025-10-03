@@ -65,7 +65,7 @@ open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions
             // Small update
             for ((j, i) in area.iterator(dimensions).withIndex()) {
                 val item = solid.grid[j]
-                if (item == TRANSPARENT) continue
+                if (item === TRANSPARENT) continue
                 inv.setItem(i, solid.grid[j])
             }
         } else {
@@ -73,7 +73,7 @@ open class FluidGui(title: Component, rows: Int) : ContainerComponent(Dimensions
             val contents = inv.contents
             for ((j, i) in area.iterator(dimensions).withIndex()) {
                 val item = solid.grid[j]
-                if (item == TRANSPARENT) continue
+                if (item === TRANSPARENT) continue
                 contents[i] = solid.grid[j]
             }
             inv.contents = contents
