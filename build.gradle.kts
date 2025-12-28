@@ -1,18 +1,18 @@
 plugins {
-    kotlin("jvm") version "2.1.0"
+    kotlin("jvm") version "2.3.0"
     `maven-publish`
 
 }
 
 group = "net.ultragrav"
-version = "1.0.15-minestom-1.21.7"
+version = "1.0.16-minestom-1.21.11"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compileOnly("net.minestom:minestom:2025.07.10-1.21.7")
+    compileOnly("net.minestom:minestom:2025.12.20c-1.21.11")
     compileOnly("net.kyori:adventure-api")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.3")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.3")
@@ -30,5 +30,5 @@ publishing {
     }
 }
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(25)
 }
