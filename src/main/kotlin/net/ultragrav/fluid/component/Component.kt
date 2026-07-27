@@ -1,5 +1,6 @@
 package net.ultragrav.fluid.component
 
+import kotlinx.coroutines.CoroutineScope
 import net.minestom.server.entity.Player
 import net.minestom.server.event.inventory.InventoryPreClickEvent
 import net.ultragrav.fluid.InventoryCloseInfo
@@ -15,11 +16,19 @@ abstract class Component(val dimensions: Dimensions) {
     open val root: ContainerComponent
         get() = parent.root
 
+    internal open val scope: CoroutineScope get() = parent.scope
+
     abstract fun render(): Solid
     abstract fun click(x: Int, y: Int, clickEvent: InventoryPreClickEvent)
 
     open fun onOpen(player: Player) {}
     open fun onClose(event: InventoryCloseInfo) {}
+
+    open fun updateRoot() {
+        if (!::parent.isInitialized) return
+        if (parent == this) update()
+        else parent.updateRoot()
+    }
 
     open fun update(area: Shape = Rectangle(dimensions), solid: Solid = render()) {
         // Not initialized yet, this update will be superseded by the one called by the parent

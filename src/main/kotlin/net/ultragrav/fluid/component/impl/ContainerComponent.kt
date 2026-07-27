@@ -10,6 +10,7 @@ import net.ultragrav.fluid.component.layout.FlexLayout
 import net.ultragrav.fluid.component.layout.LayoutStrategy
 import net.ultragrav.fluid.inventory.shape.Rectangle
 import net.ultragrav.fluid.inventory.shape.Shape
+import net.ultragrav.fluid.inventory.FluidGui
 import net.ultragrav.fluid.render.FluidRenderer
 import net.ultragrav.fluid.render.Solid
 
@@ -19,6 +20,12 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
     private var dynamicRenderer: (ContainerComponent.() -> Unit)? = null
     private val children0: MutableList<Child> = ArrayList()
     val children get() = children0.toList()
+
+    var background: ItemStack = FluidGui.TRANSPARENT
+        set(value) {
+            field = value
+            update()
+        }
 
     override val root: ContainerComponent
         get() {
@@ -72,12 +79,6 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
         require(areaOccupied.intersect(occupied).isEmpty()) { "Overlapping component!" }
     }
 
-    var background: ItemStack = ItemStack.AIR
-        set(value) {
-            field = value
-            update()
-        }
-
     fun layout(strategy: LayoutStrategy) {
         layoutStrategy = strategy
     }
@@ -97,7 +98,7 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
     }
 
     private fun doLayout() {
-        val layout = layoutStrategy ?: return
+        val layout = layoutStrategy ?: FlexLayout()
         val newChildren = layout.layout(children0.map { it.component }, dimensions)
         children0.clear()
         children0.addAll(newChildren)
@@ -113,9 +114,8 @@ open class ContainerComponent(size: Dimensions) : Component(size) {
     override fun render(): Solid {
         doDynamicSetup()
         if (children0.any { it.x == -1 || it.y == -1 }) doLayout()
-        if (children0.any { it.x == -1 || it.y == -1 }) throw IllegalStateException("Layout failed!")
         val renderer = FluidRenderer(this)
-        background?.let { renderer.fill(it) }
+        renderer.fill(background)
         for (child in children0) {
             val solid = child.component.render()
             renderer.drawSolid(child.x, child.y, solid)
