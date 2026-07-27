@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "net.ultragrav"
-version = "1.0.16-minestom-1.21.11"
+version = "1.0.17-minestom-26.1.2"
 
 repositories {
     mavenCentral()
