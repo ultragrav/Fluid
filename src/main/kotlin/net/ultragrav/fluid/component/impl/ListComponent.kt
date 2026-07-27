@@ -46,6 +46,7 @@ open class ListComponent<T>(
     }
 
     override fun click(x: Int, y: Int, clickEvent: InventoryPreClickEvent) {
+        if (x !in 0..<dimensions.width || y !in 0..<dimensions.height) return
         val index = x + y * dimensions.width + offset
         if (index < 0 || index >= size) return
         clickHandler(index, this[index], clickEvent)
