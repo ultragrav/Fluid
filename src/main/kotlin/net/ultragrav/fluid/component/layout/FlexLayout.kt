@@ -130,7 +130,7 @@ class FlexLayout(
             }
             Justify.SPACE_BETWEEN -> {
                 val space = limit - group.size
-                if (space % (group.members.size - 1) != 0) return flex(group, Justify.CENTER, limit)
+                if (group.members.size <= 1 || space % (group.members.size - 1) != 0) return flex(group, Justify.CENTER, limit)
                 val gap = space / (group.members.size - 1).coerceAtLeast(1)
                 var acc = 0
                 for (item in group.members) {
@@ -140,7 +140,7 @@ class FlexLayout(
             }
             Justify.SPACE_AROUND -> {
                 val space = limit - group.size
-                if (space % group.members.size != 0) return flex(group, Justify.SPACE_BETWEEN, limit)
+                if (group.members.isEmpty() || space % group.members.size != 0) return flex(group, Justify.SPACE_BETWEEN, limit)
                 val gap = space / group.members.size
                 var acc = gap / 2
                 for (item in group.members) {
